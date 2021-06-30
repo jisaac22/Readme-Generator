@@ -1,9 +1,9 @@
 // TODO: Include packages needed for this application
 const inquirer = require ('inquirer')
 const fs = require('fs')
-const generateMarkdown = require ("./generateMarkdown")
+
 // TODO: Create an array of questions for user input
-const questions = (data) =>
+const questions = () =>
    inquirer.prompt([
         {
             type: 'input',
@@ -39,12 +39,12 @@ const questions = (data) =>
         {
             type: 'input',
             message: 'What command should be run to run tests?',
-            name: 'usage',
+            name: 'tests',
         },
         {
             type: 'input',
             message: "What does the user need to know about using the repo?",
-            name: 'instructions',
+            name: 'usage',
         },
         {
             type: 'input',
@@ -52,20 +52,46 @@ const questions = (data) =>
             name: "contributions",
         },
 
-])
+]);
+
+function generateMarkdown(data) {
+return `# ${data.title}
+${data.description}
+    
+## Table of Contents
+* [Installation](#Installation)
+* [Usage](#Usage)
+* [License](#License)
+* [Contributions](#Contributions)
+* [Test](#Test)
+* [Questions](#Questions)
+    
+### Installations:
+    Install the following dependencies to run 
+${data.installation}
+    
+### Usage 
+${data.usage}
+    
+### License
+The License(s) being used is 
+${data.license}
+    
+### Contributing
+${data.contributions}
+    
+### Test
+${data.tests}
+    
+### Questions
+Here is my contact information for additional questions
+Github: https://github.com/${data.github},
+Email: ${data.email}
+  `;
+  }
+  questions()
 .then((data) => {
-    if (data === null){
-        console.log("Please enter a response!")
-    } else {
-        console.log("Wait for Readme.md")
-    }
-});
-
-// TODO: Create a function to write README file
-function writeToFile(fileName, data) {}
-
-// TODO: Create a function to initialize app
-function init() {}
-
-// Function call to initialize app
-init();
+   fs.writeFile('README.md', generateMarkdown(data), (err) =>
+       err ? console.log(err) : console.log("Wait for Readme.md")
+       )}
+);
